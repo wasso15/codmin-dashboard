@@ -1,5 +1,6 @@
 import Image from "next/image";
 import FeatureCard from "@/components/FeatureCard";
+import Link from "next/link";
 
 export default function LandingPage() {
   return (
@@ -30,9 +31,11 @@ export default function LandingPage() {
             des fonctionnalités les plus utilisées et envoie des rapports
             périodiques.
           </p>
-          <button className="mt-2 px-8 py-3 text-sm bg-[#0055A6] text-white rounded-lg shadow hover:bg-[#0055A6] transition">
-            Commencer
-          </button>
+          <Link href="/login">
+            <button className="mt-2 px-8 py-3 text-sm bg-[#0055A6] text-white rounded-lg shadow hover:bg-[#0055A6]/95 cursor-pointer transition">
+              Commencer
+            </button>
+          </Link>
         </div>
         {/* Colonne droite */}
         <div className="flex-1 flex flex-col gap-8 w-full max-w-md">
