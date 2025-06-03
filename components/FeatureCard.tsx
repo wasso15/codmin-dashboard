@@ -6,6 +6,8 @@ interface FeatureCardProps {
   alt: string;
   title: string;
   description: string;
+  className?: string;
+  style?: React.CSSProperties;
 }
 
 export default function FeatureCard({
@@ -13,9 +15,14 @@ export default function FeatureCard({
   alt,
   title,
   description,
+  className = "",
+  style = {},
 }: FeatureCardProps) {
   return (
-    <div className="flex items-start gap-4 bg-white rounded-2xl shadow-lg p-6 border-l-8 border-[#0055A6]">
+    <div
+      className={`flex items-start gap-4 bg-white rounded-2xl shadow-lg p-6 border-l-8 border-[#0055A6] ${className}`}
+      style={style}
+    >
       <div className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-full bg-[#0055A6]">
         <Image src={icon} alt={alt} width={24} height={24} />
       </div>

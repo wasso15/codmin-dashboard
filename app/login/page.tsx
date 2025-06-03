@@ -6,6 +6,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { Toast } from "@/components/ui/toast";
 
+type LoginFormData = {
+  email: string;
+  password: string;
+};
+
 export default function LoginPage() {
   const router = useRouter();
   const {
@@ -13,10 +18,10 @@ export default function LoginPage() {
     handleSubmit,
     formState: { errors },
     setError: setFormError,
-  } = useForm();
+  } = useForm<LoginFormData>();
   const [error, setError] = useState("");
 
-  const onSubmit = (data: any) => {
+  const onSubmit = (data: LoginFormData) => {
     // Simple auth mock
     if (data.email === "admin@demo.com" && data.password === "admin") {
       localStorage.setItem("isAuth", "true");
