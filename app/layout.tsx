@@ -1,20 +1,9 @@
-import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
-
-export const metadata: Metadata = {
+export const metadata = {
   title: "CodMine Dashboard",
-  description: "Landing, login et dashboard sécurisé",
+  description:
+    "La plateforme permet de suivre en temps réel les téléchargements et la répartition géographique des utilisateurs. Elle offre un aperçu des fonctionnalités les plus utilisées et envoie des rapports périodiques",
 };
 
 export default function RootLayout({
@@ -25,10 +14,11 @@ export default function RootLayout({
   return (
     <html lang="fr">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
+        className="antialiased"
+        style={{ fontFamily: "CooperHewitt, Arial, sans-serif" }}
       >
         <div className="min-h-screen flex flex-col">
-          <main className="flex-1">{children}</main>
+          <main className="flex-1 flex flex-col h-full">{children}</main>
           <footer className="w-full grid grid-cols-3 h-2 text-xs border-t backdrop-blur">
             <div className="flex items-center justify-center bg-[#2EAAE2] text-white"></div>
             <div className="flex items-center justify-center bg-[#FEF200] text-white"></div>
