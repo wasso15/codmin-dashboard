@@ -17,9 +17,9 @@ export default function RootLayout({
         className="antialiased"
         style={{ fontFamily: "CooperHewitt, Arial, sans-serif" }}
       >
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col ">
           <main className="flex-1 flex flex-col h-full">{children}</main>
-          <footer className="w-full grid grid-cols-3 h-2 text-xs border-t backdrop-blur">
+          <footer className="w-full grid grid-cols-3 h-[8px] text-xs border-t backdrop-blur fixed bottom-0 left-0 z-50">
             <div className="flex items-center justify-center bg-[#2EAAE2] text-white"></div>
             <div className="flex items-center justify-center bg-[#FEF200] text-white"></div>
             <div className="flex items-center justify-center bg-[#D02335] text-white"></div>
