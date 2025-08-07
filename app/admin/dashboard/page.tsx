@@ -5,8 +5,8 @@ import React from "react";
 import DashboardBarChart from "@/components/DashboardBarChart";
 import ProvinceBarChart from "@/components/ProvinceBarChart";
 import { Button } from "@/components/ui/button";
+import ExportButton from "@/components/ExportButton";
 import Image from "next/image";
-import { Share } from "lucide-react";
 
 const stats = [
   {
@@ -110,9 +110,10 @@ export default async function Page() {
         </div>
         {/* Widgets latéraux */}
         <div className="flex flex-col gap-6">
-          <Button className="bg-[#005CB9]   text-white w-full py-7 rounded-xl shadow">
-            <Share size={32} className="mr-6 text-2xl" /> Exporter le rapport
-          </Button>
+          <ExportButton
+            className="bg-[#005CB9] text-white w-full py-7 rounded-xl shadow"
+            size="lg"
+          />
           <div className="bg-[#005CB9] grow rounded-2xl p-8 text-white flex flex-col gap-2 shadow">
             <Button
               variant="outline"
@@ -123,13 +124,14 @@ export default async function Page() {
             <div className="text-xs font-bold mb-1 mt-2">Article 1</div>
             <div className="text-[13px] text-justify ">
               Le présent Code a pour objet de régir les activités minières sur
-              toute l’étendue du territoire national, à savoir : la prospection,
-              la recherche, l’exploitation, le traitement, le transport, la
-              transformations, et la commercialisation des substances minérales.
-              Il a également pour but de promouvoir les investissements dans le
-              secteur minier; de garantir la transparence, la bonne gouvernance
-              et la gestion durable des ressources minières, de protéger
-              l’environnement et les droits des communautés locales…
+              toute l&apos;étendue du territoire national, à savoir : la
+              prospection, la recherche, l&apos;exploitation, le traitement, le
+              transport, la transformations, et la commercialisation des
+              substances minérales. Il a également pour but de promouvoir les
+              investissements dans le secteur minier; de garantir la
+              transparence, la bonne gouvernance et la gestion durable des
+              ressources minières, de protéger l&apos;environnement et les
+              droits des communautés locales…
             </div>
           </div>
         </div>
