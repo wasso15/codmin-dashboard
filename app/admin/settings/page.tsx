@@ -1,73 +1,126 @@
-import { Button } from "@/components/ui/button";
-import React from "react";
+"use client";
 
-const users = [
-  {
-    lastname: "Wasso",
-    middlename: "Mbiya",
-    firstname: "Guylain",
-    gender: "Masculin",
-    position: "IT",
-    department: "Informatique",
-    email: "g.wasso@minesrdc.com",
-  },
-  {
-    lastname: "Wasso",
-    middlename: "Mbiya",
-    firstname: "Guylain",
-    gender: "Masculin",
-    position: "IT",
-    department: "Informatique",
-    email: "g.wasso@minesrdc.com",
-  },
-  {
-    lastname: "Wasso",
-    middlename: "Mbiya",
-    firstname: "Guylain",
-    gender: "Masculin",
-    position: "IT",
-    department: "Informatique",
-    email: "g.wasso@minesrdc.com",
-  },
-  {
-    lastname: "Wasso",
-    middlename: "Mbiya",
-    firstname: "Guylain",
-    gender: "Masculin",
-    position: "IT",
-    department: "Informatique",
-    email: "g.wasso@minesrdc.com",
-  },
-  {
-    lastname: "Wasso",
-    middlename: "Mbiya",
-    firstname: "Guylain",
-    gender: "Masculin",
-    position: "IT",
-    department: "Informatique",
-    email: "g.wasso@minesrdc.com",
-  },
-  //   {
-  //     lastname: "Wasso",
-  //     middlename: "Mbiya",
-  //     firstname: "Guylain",
-  //     gender: "Masculin",
-  //     position: "IT",
-  //     department: "Informatique",
-  //     email: "g.wasso@minesrdc.com",
-  //   },
-  //   {
-  //     lastname: "Wasso",
-  //     middlename: "Mbiya",
-  //     firstname: "Guylain",
-  //     gender: "Masculin",
-  //     position: "IT",
-  //     department: "Informatique",
-  //     email: "g.wasso@minesrdc.com",
-  //   },
-];
+import { Button } from "@/components/ui/button";
+import React, { useState, useEffect } from "react";
+
+type User = {
+  lastname: string;
+  middlename: string;
+  firstname: string;
+  gender: string;
+  position: string;
+  department: string;
+  email: string;
+};
+
 
 export default function SettingsPage() {
+  const [users, setUsers] = useState<User[]>([]);
+  useEffect(() => {
+    // Charger les utilisateurs réels depuis l'API
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch("/api/auth/users");
+        if (!res.ok) throw new Error("Erreur lors du chargement des utilisateurs");
+        const data = await res.json();
+        setUsers(data.users || []);
+      } catch (e) {
+        // Optionnel: afficher une erreur ou fallback
+      }
+    };
+    fetchUsers();
+  }, []);
+
+
+  console.log("Utilisateurs chargés:", users);
+
+  const [showForm, setShowForm] = useState(false);
+  const [formData, setFormData] = useState({
+    lastname: "",
+    middlename: "",
+    firstname: "",
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    role: "Utilisateur",
+    gender: "Masculin",
+    position: "",
+    department: "",
+  });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+    setSuccess("");
+    try {
+      const res = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          firstname: formData.firstname,
+          middlename: formData.middlename,
+          lastname: formData.lastname,
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          confirmPassword: formData.confirmPassword,
+          role: formData.role,
+          genre: formData.gender,
+        }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.message || "Erreur lors de l'ajout");
+      } else {
+        setSuccess("Utilisateur ajouté avec succès");
+        // Ajout immédiat dans le tableau local
+        setUsers([
+          ...users,
+          {
+            lastname: formData.lastname,
+            middlename: formData.middlename,
+            firstname: formData.firstname,
+            gender: formData.gender,
+            position: formData.position,
+            department: formData.department,
+            email: formData.email,
+          },
+        ]);
+
+
+        setShowForm(false);
+        setFormData({
+          lastname: "",
+          middlename: "",
+          firstname: "",
+          username: "",
+          email: "",
+          password: "",
+          confirmPassword: "",
+          role: "Utilisateur",
+          gender: "Masculin",
+          position: "",
+          department: "",
+        });
+      }
+    } catch (err) {
+      setError("Erreur réseau ou serveur");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="bg-[#F4F6FB] p-0 md:p-8">
       <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-8">
@@ -75,7 +128,7 @@ export default function SettingsPage() {
           Paramètres
         </h1>
       </div>
-      <div className=" grid grid-cols-1 md:grid-cols-6 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-6 gap-4">
         <div className="md:col-span-4">
           {/* Bloc infos compte */}
           <div className="bg-white rounded-2xl p-6 mb-6 shadow-sm border border-[#F0F0F0]">
@@ -102,6 +155,7 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
+
           {/* Bloc sécurité */}
           <div className="bg-white rounded-2xl p-6 mb-6 shadow-sm border border-[#F0F0F0]">
             <div className="font-semibold text-lg mb-2">
@@ -113,7 +167,7 @@ export default function SettingsPage() {
                   Mot de passe
                 </div>
                 <div className="text-xs text-gray-500">
-                  Votre mot de passe doit etre efficace pour une meilleure
+                  Votre mot de passe doit être efficace pour une meilleure
                   protection
                 </div>
               </div>
@@ -130,11 +184,10 @@ export default function SettingsPage() {
               </div>
             </div>
           </div>
+
           {/* Tableau utilisateurs */}
           <div className="bg-white rounded-2xl p-6 shadow-sm border border-[#F0F0F0]">
-            <div className="font-semibold text-lg mb-4">
-              Utilisateurs Ajoutés
-            </div>
+            <div className="font-semibold text-lg mb-4">Utilisateurs Ajoutés</div>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
@@ -171,10 +224,143 @@ export default function SettingsPage() {
             </div>
           </div>
         </div>
-        <div className="md:col-span-2">
-          <Button className="bg-[#005CB9] text-white rounded-md px-8 py-6 shadow-md text-xs  hover:bg-[#004a99] transition-all w-full md:w-full">
+
+        <div className="md:col-span-2 flex flex-col items-center">
+            <Button
+            className="bg-[#005CB9] text-white rounded-md px-8 py-6 shadow-md text-xs hover:bg-[#004a99] transition-all w-full md:w-full"
+            onClick={() => setShowForm(true)}
+          >
             + Ajouter un utilisateur
           </Button>
+          {showForm && (
+            <form
+              onSubmit={handleSubmit}
+              className="bg-white rounded-xl shadow-md border border-[#F0F0F0] mt-9 px-6 py-4 mb-4 w-full"
+            >
+              <div className="mt-8 px-3 flex flex-col">
+                <input
+                  type="text"
+                  name="lastname"
+                  placeholder="Nom"
+                  value={formData.lastname}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                  required
+                />
+                <input
+                  type="text"
+                  name="middlename"
+                  placeholder="Post-nom"
+                  value={formData.middlename}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                  required
+                />
+                <input
+                  type="text"
+                  name="firstname"
+                  placeholder="Prénom"
+                  value={formData.firstname}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                  required
+                />
+                <input
+                  type="text"
+                  name="username"
+                  placeholder="Nom d'utilisateur"
+                  value={formData.username}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                  required
+                />
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                >
+                  <option value="Masculin">Masculin</option>
+                  <option value="Féminin">Féminin</option>
+                </select>
+                <input
+                  type="text"
+                  name="position"
+                  placeholder="Position"
+                  value={formData.position}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                  required
+                />
+                <input
+                  type="text"
+                  name="department"
+                  placeholder="Département"
+                  value={formData.department}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                  required
+                />
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="E-mail"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                  required
+                />
+                <input
+                  type="password"
+                  name="password"
+                  placeholder="Mot de passe"
+                  value={formData.password}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                  required
+                />
+                <input
+                  type="password"
+                  name="confirmPassword"
+                  placeholder="Confirmer le mot de passe"
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                  required
+                />
+                <select
+                  name="role"
+                  value={formData.role}
+                  onChange={handleChange}
+                  className="w-full border rounded px-3 py-2 mb-4"
+                >
+                  <option value="Utilisateur">Utilisateur</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </div>
+              {error && <div className="text-red-500 text-xs mb-2">{error}</div>}
+              {success && <div className="text-green-600 text-xs mb-2">{success}</div>}
+              <div className="flex justify-end gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  className="px-4 py-2 text-xs"
+                  onClick={() => setShowForm(false)}
+                  disabled={loading}
+                >
+                  Annuler
+                </Button>
+                <Button
+                  type="submit"
+                  className="bg-[#005CB9] text-white px-4 py-2 text-xs"
+                  disabled={loading}
+                >
+                  {loading ? "Ajout..." : "Ajouter"}
+                </Button>
+              </div>
+            </form>
+          )}
+        
         </div>
       </div>
     </div>
